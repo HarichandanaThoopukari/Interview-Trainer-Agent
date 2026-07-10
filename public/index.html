@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Interview Trainer Agent · Practice Smarter. Interview Stronger.</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎯</text></svg>" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+
+<!-- ============ AUTH SCREEN ============ -->
+<div id="auth-screen" class="auth-screen">
+  <div class="auth-visual">
+    <div class="auth-blob blob-1"></div>
+    <div class="auth-blob blob-2"></div>
+    <div class="auth-blob blob-3"></div>
+    <div class="auth-visual-content">
+      <div class="brand-mark">🎯 Interview Trainer Agent</div>
+      <h1>Practice Smarter.<br/>Interview Stronger.<br/><span class="grad-text">Get Hired Faster.</span></h1>
+      <p class="auth-visual-sub">Your AI mentor for technical, HR, coding and behavioral interviews — powered by IBM watsonx.ai &amp; Granite.</p>
+      <ul class="auth-feature-list">
+        <li><span class="dot dot-blue"></span> Resume ATS analysis in seconds</li>
+        <li><span class="dot dot-violet"></span> Realistic AI mock interviews with scoring</li>
+        <li><span class="dot dot-teal"></span> Personalized DSA &amp; study roadmaps</li>
+        <li><span class="dot dot-amber"></span> Honest, constructive feedback — always</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="auth-form-panel">
+    <div class="auth-card">
+      <div id="login-form" class="auth-form">
+        <h2>Welcome back</h2>
+        <p class="muted">Log in to continue your prep journey.</p>
+        <label>Email</label>
+        <input type="email" id="login-email" placeholder="you@example.com" />
+        <label>Password</label>
+        <input type="password" id="login-password" placeholder="••••••••" />
+        <button class="btn btn-primary" id="login-btn">Log In</button>
+        <p class="form-error" id="login-error"></p>
+        <p class="switch-form">New here? <a href="#" id="show-signup">Create an account</a></p>
+        <p class="switch-form small"><a href="#" id="show-forgot">Forgot password?</a></p>
+      </div>
+
+      <div id="signup-form" class="auth-form hidden">
+        <h2>Create your account</h2>
+        <p class="muted">Tell us a bit about your goals — we'll build your roadmap.</p>
+        <label>Full Name</label>
+        <input type="text" id="signup-name" placeholder="Jane Doe" />
+        <label>Email</label>
+        <input type="email" id="signup-email" placeholder="you@example.com" />
+        <label>Password</label>
+        <input type="password" id="signup-password" placeholder="Minimum 6 characters" />
+        <label>Experience Level</label>
+        <select id="signup-experience">
+          <option>Student</option>
+          <option>Fresher</option>
+          <option>1-3 Years</option>
+          <option>3-5 Years</option>
+          <option>5+ Years</option>
+        </select>
+        <label>Target Job Role</label>
+        <input type="text" id="signup-role" placeholder="e.g. Frontend Developer" />
+        <label>Industry</label>
+        <input type="text" id="signup-industry" placeholder="e.g. IT Services, Product, Fintech" />
+        <label>Key Skills (comma separated)</label>
+        <input type="text" id="signup-skills" placeholder="e.g. React, Node.js, SQL" />
+        <button class="btn btn-primary" id="signup-btn">Create Account &amp; Get My Roadmap</button>
+        <p class="form-error" id="signup-error"></p>
+        <p class="switch-form">Already have an account? <a href="#" id="show-login">Log in</a></p>
+      </div>
+
+      <div id="forgot-form" class="auth-form hidden">
+        <h2>Reset password</h2>
+        <p class="muted">We'll generate a temporary password for you.</p>
+        <label>Email</label>
+        <input type="email" id="forgot-email" placeholder="you@example.com" />
+        <button class="btn btn-primary" id="forgot-btn">Send Reset</button>
+        <p class="form-success" id="forgot-result"></p>
+        <p class="switch-form"><a href="#" id="show-login-2">Back to login</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ APP SHELL ============ -->
+<div id="app-shell" class="app-shell hidden">
+  <aside class="sidebar">
+    <div class="sidebar-brand">🎯 <span>Interview Trainer</span></div>
+    <nav class="sidebar-nav">
+      <button class="nav-item active" data-view="dashboard"><span class="nav-icon">📊</span>Dashboard</button>
+      <button class="nav-item" data-view="chat"><span class="nav-icon">💬</span>Mentor Chat</button>
+      <button class="nav-item" data-view="resume"><span class="nav-icon">📄</span>Resume Analysis</button>
+      <button class="nav-item" data-view="questions"><span class="nav-icon">❓</span>Question Bank</button>
+      <button class="nav-item" data-view="mock"><span class="nav-icon">🎤</span>Mock Interview</button>
+      <button class="nav-item" data-view="studyplan"><span class="nav-icon">🗺️</span>Study Plan</button>
+      <button class="nav-item" data-view="bookmarks"><span class="nav-icon">🔖</span>Bookmarks</button>
+      <button class="nav-item" data-view="profile"><span class="nav-icon">👤</span>Profile</button>
+    </nav>
+    <button class="btn btn-ghost logout-btn" id="logout-btn">⏻ Log Out</button>
+  </aside>
+
+  <main class="main-content">
+    <header class="topbar">
+      <div class="topbar-title" id="view-title">Dashboard</div>
+      <div class="topbar-user">
+        <span id="watsonx-status" class="status-pill">● checking watsonx…</span>
+        <span class="user-chip" id="user-chip">U</span>
+      </div>
+    </header>
+
+    <div class="view-container" id="view-container">
+
+      <!-- DASHBOARD VIEW -->
+      <section id="view-dashboard" class="view">
+        <div class="grid grid-3">
+          <div class="card readiness-card">
+            <div class="readiness-ring-wrap">
+              <svg viewBox="0 0 120 120" class="readiness-ring">
+                <circle cx="60" cy="60" r="52" class="ring-bg"/>
+                <circle cx="60" cy="60" r="52" class="ring-fg" id="readiness-ring-fg"/>
+              </svg>
+              <div class="readiness-value"><span id="readiness-score">--</span><small>/100</small></div>
+            </div>
+            <div class="readiness-label">Interview Readiness</div>
+            <div class="muted small" id="readiness-goal">Target role not set</div>
+          </div>
+
+          <div class="card stat-card">
+            <div class="stat-row"><span>Questions Practiced</span><b id="stat-questions">0</b></div>
+            <div class="stat-row"><span>Mock Interviews</span><b id="stat-mocks">0</b></div>
+            <div class="stat-row"><span>Coding Tests</span><b id="stat-coding">0</b></div>
+            <div class="stat-row"><span>Confidence Score</span><b id="stat-confidence">0</b></div>
+          </div>
+
+          <div class="card welcome-card">
+            <div class="welcome-emoji">👋</div>
+            <div class="welcome-title" id="welcome-name">Welcome back</div>
+            <p class="muted small">Let's keep building your interview-ready momentum today.</p>
+            <button class="btn btn-accent-teal" data-goto="mock">Start a Mock Interview →</button>
+          </div>
+        </div>
+
+        <div class="grid grid-2">
+          <div class="card">
+            <h3>Strengths &amp; Weak Areas</h3>
+            <div class="tag-group">
+              <div class="tag-col">
+                <div class="tag-col-title good">Strengths</div>
+                <div id="strengths-list" class="tag-list"></div>
+              </div>
+              <div class="tag-col">
+                <div class="tag-col-title bad">Weak Areas</div>
+                <div id="weaknesses-list" class="tag-list"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>Recent Chats</h3>
+            <div id="recent-chats-list" class="recent-list"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CHAT VIEW -->
+      <section id="view-chat" class="view hidden">
+        <div class="chat-shell card">
+          <div class="chat-window" id="chat-window">
+            <div class="chat-msg mentor">
+              <div class="bubble">Hi! I'm your interview mentor 👋 What role are you preparing for, and which companies are you targeting?</div>
+            </div>
+          </div>
+          <div class="chat-input-row">
+            <input type="text" id="chat-input" placeholder="Ask me anything about your interview prep…" />
+            <button class="btn btn-primary" id="chat-send">Send</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- RESUME VIEW -->
+      <section id="view-resume" class="view hidden">
+        <div class="card upload-card">
+          <h3>Upload Your Resume</h3>
+          <p class="muted small">PDF, DOCX or TXT · Max 5MB. We'll compute your ATS score and give AI-powered feedback.</p>
+          <input type="file" id="resume-file" accept=".pdf,.docx,.txt" />
+          <button class="btn btn-accent-amber" id="resume-upload-btn">Analyze Resume</button>
+          <p id="resume-status" class="muted small"></p>
+        </div>
+
+        <div id="resume-results" class="hidden">
+          <div class="grid grid-3">
+            <div class="card ats-score-card">
+              <div class="ats-score-value" id="ats-score">--</div>
+              <div class="muted small">ATS Score / 100</div>
+            </div>
+            <div class="card">
+              <h4>Keywords Found</h4>
+              <div id="ats-found" class="tag-list"></div>
+            </div>
+            <div class="card">
+              <h4>Missing Keywords</h4>
+              <div id="ats-missing" class="tag-list"></div>
+            </div>
+          </div>
+          <div class="grid grid-3">
+            <div class="card"><h4 class="good">Strengths</h4><ul id="review-strengths" class="plain-list"></ul></div>
+            <div class="card"><h4 class="bad">Weaknesses</h4><ul id="review-weaknesses" class="plain-list"></ul></div>
+            <div class="card"><h4 class="accent">Suggestions</h4><ul id="review-suggestions" class="plain-list"></ul></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- QUESTION BANK VIEW -->
+      <section id="view-questions" class="view hidden">
+        <div class="card controls-card">
+          <h3>Generate Interview Questions</h3>
+          <p class="muted small">💡 Coding tests / coding assessment practice live here too — pick <b>Coding</b> below to get problem statements, hints, and time-complexity guidance.</p>
+          <div class="control-row">
+            <select id="q-category">
+              <option value="technical">Technical</option>
+              <option value="coding">Coding (Coding Test)</option>
+              <option value="hr">HR</option>
+              <option value="behavioral">Behavioral (STAR)</option>
+            </select>
+            <select id="q-difficulty">
+              <option value="easy">Easy</option>
+              <option value="medium" selected>Medium</option>
+              <option value="hard">Hard</option>
+            </select>
+            <button class="btn btn-primary" id="q-generate-btn">Generate 5 Questions</button>
+          </div>
+        </div>
+        <div id="questions-list" class="questions-list"></div>
+      </section>
+
+      <!-- MOCK INTERVIEW VIEW -->
+      <section id="view-mock" class="view hidden">
+        <div id="mock-setup" class="card">
+          <h3>Start a Mock Interview</h3>
+          <p class="muted small">The AI will ask you questions one at a time, evaluate each answer, and give you a full report.</p>
+          <input type="text" id="mock-role" placeholder="Role (defaults to your target role)" />
+          <button class="btn btn-accent-violet" id="mock-start-btn">Start Mock Interview</button>
+        </div>
+
+        <div id="mock-session" class="hidden">
+          <div class="card">
+            <div class="mock-progress"><span id="mock-progress-label">Question 1 of 5</span></div>
+            <h3 id="mock-current-question">—</h3>
+
+            <div class="answer-mode-toggle">
+              <button class="mode-btn active" id="mode-type-btn" type="button">⌨️ Type</button>
+              <button class="mode-btn" id="mode-voice-btn" type="button">🎙️ Voice</button>
+            </div>
+
+            <div id="voice-controls" class="voice-controls hidden">
+              <button class="btn btn-accent-violet mic-btn" id="mic-btn" type="button">
+                <span id="mic-icon">🎙️</span> <span id="mic-label">Start Recording</span>
+              </button>
+              <span id="voice-status" class="muted small">Click to speak your answer — you can edit the text before submitting.</span>
+            </div>
+
+            <textarea id="mock-answer" rows="6" placeholder="Type your answer here…"></textarea>
+            <button class="btn btn-primary" id="mock-submit-btn">Submit Answer</button>
+          </div>
+          <div id="mock-feedback-card" class="card hidden">
+            <h4>Feedback on your last answer</h4>
+            <div id="mock-scores" class="mock-scores"></div>
+            <p id="mock-feedback-text" class="muted"></p>
+          </div>
+        </div>
+
+        <div id="mock-report" class="hidden">
+          <div class="card report-card">
+            <div class="report-score" id="mock-overall-score">--</div>
+            <div class="muted">Overall Mock Interview Score</div>
+            <div class="report-actions">
+              <button class="btn btn-accent-violet" id="mock-restart-btn">🔁 Attempt Another Mock Interview</button>
+              <button class="btn btn-ghost" id="mock-review-btn">📋 Review My Answers</button>
+            </div>
+          </div>
+          <div id="mock-review-list" class="hidden"></div>
+        </div>
+      </section>
+
+      <!-- STUDY PLAN VIEW -->
+      <section id="view-studyplan" class="view hidden">
+        <div class="card controls-card">
+          <h3>Generate Your Study Plan</h3>
+          <div class="control-row">
+            <select id="plan-duration">
+              <option value="7">7 Days</option>
+              <option value="30" selected>30 Days</option>
+              <option value="60">60 Days</option>
+              <option value="90">90 Days</option>
+            </select>
+            <input type="number" id="plan-hours" value="2" min="1" max="12" placeholder="Hours/day" />
+            <input type="text" id="plan-company" placeholder="Target company (optional)" />
+            <button class="btn btn-accent-teal" id="plan-generate-btn">Generate Plan</button>
+          </div>
+        </div>
+        <div class="card" id="plan-result-card" style="display:none;">
+          <div id="plan-result" class="plan-output"></div>
+          <button class="btn btn-ghost" id="plan-bookmark-btn">🔖 Bookmark this plan</button>
+        </div>
+      </section>
+
+      <!-- BOOKMARKS VIEW -->
+      <section id="view-bookmarks" class="view hidden">
+        <div id="bookmarks-list" class="bookmarks-grid"></div>
+      </section>
+
+      <!-- PROFILE VIEW -->
+      <section id="view-profile" class="view hidden">
+        <div class="card">
+          <h3>Your Profile</h3>
+          <label>Full Name</label>
+          <input type="text" id="profile-name" />
+          <label>Target Job Role</label>
+          <input type="text" id="profile-role" />
+          <label>Experience Level</label>
+          <select id="profile-experience">
+            <option>Student</option>
+            <option>Fresher</option>
+            <option>1-3 Years</option>
+            <option>3-5 Years</option>
+            <option>5+ Years</option>
+          </select>
+          <label>Industry</label>
+          <input type="text" id="profile-industry" />
+          <label>Skills</label>
+          <input type="text" id="profile-skills" />
+          <button class="btn btn-primary" id="profile-save-btn">Save Profile</button>
+          <p class="form-success" id="profile-status"></p>
+        </div>
+      </section>
+
+    </div>
+  </main>
+</div>
+
+<script src="/js/app.js"></script>
+</body>
+</html>
