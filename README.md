@@ -67,8 +67,8 @@ interview-trainer-agent/
 Your `.env` file has already been pre-filled with the API key and Project ID you provided:
 
 ```
-WATSONX_API_KEY=m5UnFLy4YiEBpkGZdGWCUBqkvhXAAHaDq6yiV8JHGlL-
-WATSONX_PROJECT_ID=7dd9f4a1-7119-4214-9380-ef579a52ad49
+WATSONX_API_KEY="ibm-cloud-api-key>"
+WATSONX_PROJECT_ID="<your-watsonx-project-id>"
 WATSONX_URL=https://us-south.ml.cloud.ibm.com
 WATSONX_MODEL_ID=ibm/granite-3-8b-instruct
 ```
